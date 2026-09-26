@@ -1,22 +1,22 @@
-# Lightweight model for sorting trash
+# Lightweight model for sorting waste
 
 This repository is a group project developed for the course Machine Learning Operations (02476) at The Technical University of Denmark (DTU).
 
-The project aims at finetuning an open source model for classification of images of trash into categories of recyclable materials. Focus will be kept on a flexible solution, that utilizes a range of MLOps technologies
+The project aims at finetuning an open source model for classification of images of waste into categories of recyclable materials. Focus will be kept on a flexible solution, that utilizes a range of MLOps technologies
 
 ## Project Description
-Our customer requests a lightweight image classification solution capable of categorizing images of trash into a fixed set of recycling categories. The solution must be able to run locally on mobile devices with limited hardware resources. Additionally, it should be easy to extend the system with new recycling categories in order to adapt to changes in recycling regulations and differences across markets.
+Our customer requests a lightweight image classification solution capable of categorizing images of waste into a fixed set of recycling categories. The solution must be able to run locally on mobile devices with limited hardware resources. Additionally, it should be easy to extend the system with new recycling categories in order to adapt to changes in recycling regulations and differences across markets.
 
-To accommodate these requirements, we will leverage the skills acquired during the Machine Learning Operations course to develop a proof-of-concept deep learning solution that is both robust and easily adaptable. The system will take an image of a single piece of trash as input and output an estimate of the appropriate recycling category.
+To accommodate these requirements, we will leverage the skills acquired during the Machine Learning Operations course to develop a proof-of-concept deep learning solution that is both robust and easily adaptable. The system will take an image of a single piece of waste as input and output an estimate of the appropriate recycling category.
 
-Initially, the recycling categories will include paper, glass, plastic, metal, cardboard, and non-recyclable trash. However, the system should be designed to easily support additional categories, such as hazardous waste, batteries, or colored versus clear glass, without requiring major architectural changes.
+Initially, the recycling categories will include paper, glass, plastic, metal, cardboard, and non-recyclable waste. However, the system should be designed to easily support additional categories, such as hazardous waste, batteries, or colored versus clear glass, without requiring major architectural changes.
 
-As a baseline, we will fine-tune a pretrained PyTorch-based image classification model, MobileNet-v3, from the PyTorch Image Models (timm) library, with a focus on lightweight architectures suitable for mobile deployment with the possibility of investigating other pretrained models if time allows (e.g., MobileNet variants). The model will be trained on the TrashNet dataset hosted on Hugging Face, which contains approximately 5,000 labeled images across the initial recycling categories. The solution will be designed to accommodate new training data and enable experimentation with different base models in a flexible and reproducible manner.
+As a baseline, we will fine-tune a pretrained PyTorch-based image classification model, MobileNet-v3, from the PyTorch Image Models (timm) library, with a focus on lightweight architectures suitable for mobile deployment with the possibility of investigating other pretrained models if time allows (e.g., MobileNet variants). The model will be trained on the wasteNet dataset hosted on Hugging Face, which contains approximately 5,000 labeled images across the initial recycling categories. The solution will be designed to accommodate new training data and enable experimentation with different base models in a flexible and reproducible manner.
 
 In our implementation, we will focus on utilizing tools for stable cloud-deployment such as Docker and FastAPI. Furthermore we will make use of tools for continuous integration (CI) and experiment tracking in order to ensure reproducibility, maintanability and scalability.
 
 ### Resources
-- [Trashnet dataset](https://huggingface.co/datasets/garythung/trashnet)
+- [wastenet dataset](https://huggingface.co/datasets/garythung/wastenet)
 - [MobileNet-v3](https://huggingface.co/timm/mobilenetv3_small_100.lamb_in1k)
 
 
@@ -30,8 +30,8 @@ The easiest way to get started is using the provided dev container which include
 2. **Setup:**
    ```bash
    # Clone the repository
-   git clone https://github.com/madsoedk/trash-image-sorting.git
-   cd trash-image-sorting
+   git clone https://github.com/madsoedk/waste-image-sorting.git
+   cd waste-image-sorting
 
 3. Open in Dev Container:
    Open the project in VS Code
@@ -47,7 +47,7 @@ The easiest way to get started is using the provided dev container which include
 gcloud auth login
 
 # Set your project ID
-gcloud config set project trashclassification-484408
+gcloud config set project wasteclassification-484408
 
 # Enable required APIs
 gcloud services enable artifactregistry.googleapis.com
@@ -121,7 +121,7 @@ Load tests measure API performance under different loads using Locust:
 
 ```bash
 # 1. Start the API server
-uvicorn trashsorting.api:app --host 0.0.0.0 --port 8000
+uvicorn wastesorting.api:app --host 0.0.0.0 --port 8000
 
 # 2. Run load tests (in a new terminal)
 ./run_load_tests.sh
@@ -192,8 +192,8 @@ uv run invoke gcp-push-api
 ```
 2. Deploy to Cloud Run
 ```
-gcloud run deploy trashsorting-api \
-  --image europe-west1-docker.pkg.dev/trashclassification-484408/trashclassification/api:latest \
+gcloud run deploy wastesorting-api \
+  --image europe-west1-docker.pkg.dev/wasteclassification-484408/wasteclassification/api:latest \
   --platform managed \
   --region europe-west1 \
   --allow-unauthenticated \
@@ -204,14 +204,14 @@ gcloud run deploy trashsorting-api \
 ```
 3. Get Service URL
 ```
-gcloud run services describe trashsorting-api \
+gcloud run services describe wastesorting-api \
   --region europe-west1 \
   --format 'value(status.url)'
 ```
 4. Test deployed API (Give it a minute or two to boot)
 ```
 # Set service URL
-export SERVICE_URL=$(gcloud run services describe trashsorting-api \
+export SERVICE_URL=$(gcloud run services describe wastesorting-api \
   --region europe-west1 \
   --format 'value(status.url)')
 
